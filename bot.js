@@ -51,20 +51,20 @@ bot.onText(/\/start (.+)/, async (msg, match) => {
 
     console.log('✅ Backend response:', response.data);
 
-    if (response.data.success) {
+    if (response.data._metadata?.success) {
       // Success - send channel link
       await bot.sendMessage(
         chatId,
-        `✅ Tài khoản Telegram đã được liên kết thành công!\n\n` +
-        `🎯 Bây giờ hãy tham gia channel của chúng tôi để hoàn thành nhiệm vụ:\n` +
+        `✅ Your Telegram account has been successfully linked!\n\n` +
+        `🎯 Now join our channel to complete the task:\n` +
         `👉 ${process.env.CHANNEL_INVITE_LINK}\n\n` +
-        `Sau khi tham gia, quay lại app AINO và bấm nút để verify nhận thưởng!`,
+        `After joining, return to the web and click the button to verify and claim your reward!`,
         {
           reply_markup: {
             inline_keyboard: [
               [
                 {
-                  text: '📢 Tham gia Channel ' + process.env.CHANNEL_NAME,
+                  text: '📢 Join Channel ' + process.env.CHANNEL_NAME,
                   url: process.env.CHANNEL_INVITE_LINK
                 }
               ]
@@ -76,14 +76,14 @@ bot.onText(/\/start (.+)/, async (msg, match) => {
   } catch (error) {
     console.error('❌ Error linking account:', error.response?.data || error.message);
 
-    let errorMessage = '❌ Có lỗi xảy ra khi liên kết tài khoản.';
+    let errorMessage = '❌ An error occurred while linking your account.';
 
     if (error.response?.status === 404) {
-      errorMessage = '❌ Mã liên kết không tồn tại hoặc đã được sử dụng.\n\nVui lòng tạo mã mới từ app AINO.';
+      errorMessage = '❌ The linking code does not exist or has already been used.\n\nPlease generate a new code from the AINO app.';
     } else if (error.response?.status === 410) {
-      errorMessage = '❌ Mã liên kết đã hết hạn.\n\nVui lòng quay lại app AINO và tạo mã mới.';
+      errorMessage = '❌ The linking code has expired.\n\nPlease return to the AINO app and generate a new code.';
     } else if (error.response?.status === 422) {
-      errorMessage = '❌ Dữ liệu không hợp lệ. Vui lòng thử lại từ app AINO.';
+      errorMessage = '❌ Invalid data. Please try again from the AINO app.';
     }
 
     await bot.sendMessage(chatId, errorMessage);
@@ -97,19 +97,19 @@ bot.onText(/\/start$/, async (msg) => {
 
   await bot.sendMessage(
     chatId,
-    `👋 Chào ${firstName}! Chào mừng đến với AINO Bot!\n\n` +
-    `Để liên kết tài khoản Telegram của bạn:\n` +
-    `1️⃣ Mở app AINO\n` +
-    `2️⃣ Bấm nút "Connect Telegram"\n` +
-    `3️⃣ Bạn sẽ được chuyển về đây tự động\n\n` +
+    `👋 Hello ${firstName}! Welcome to AINO Bot!\n\n` +
+    `To link your Telegram account:\n` +
+    `1️⃣ Open the AINO app\n` +
+    `2️⃣ Click the "Connect Telegram" button\n` +
+    `3️⃣ You will be redirected here automatically\n\n` +
     `📢 Channel: ${process.env.CHANNEL_USERNAME}`,
     {
       reply_markup: {
         inline_keyboard: [
           [
             {
-              text: '📱 Mở App AINO',
-              url: 'https://staging-app.ainosha.com'
+              text: '🌐 Open AINO Quest',
+              url: 'https://aino-quest.vercel.app/'
             }
           ]
         ]
@@ -122,14 +122,14 @@ bot.onText(/\/start$/, async (msg) => {
 bot.onText(/\/help/, async (msg) => {
   await bot.sendMessage(
     msg.chat.id,
-    `🤖 *AINO Bot - Hướng dẫn*\n\n` +
-    `/start - Kết nối tài khoản Telegram\n` +
-    `/help - Hiển thị hướng dẫn này\n\n` +
-    `💡 *Cách sử dụng:*\n` +
-    `1. Mở app AINO và bấm "Connect Telegram"\n` +
-    `2. Làm theo hướng dẫn để hoàn thành nhiệm vụ\n` +
-    `3. Nhận thưởng điểm sau khi verify\n\n` +
-    `📢 Tham gia channel: ${process.env.CHANNEL_USERNAME}`,
+    `🤖 *AINO Bot - Help*\n\n` +
+    `/start - Connect Telegram account\n` +
+    `/help - Display this help message\n\n` +
+    `💡 *How to use:*\n` +
+    `1. Open the AINO app and click "Connect Telegram"\n` +
+    `2. Follow the instructions to complete the task\n` +
+    `3. Receive reward points after verification\n\n` +
+    `📢 Join channel: ${process.env.CHANNEL_USERNAME}`,
     { parse_mode: 'Markdown' }
   );
 });
