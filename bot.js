@@ -1,6 +1,27 @@
 require('dotenv').config();
 const TelegramBot = require('node-telegram-bot-api');
 const axios = require('axios');
+const express = require('express');
+
+// Create Express app for health check
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.get('/', (req, res) => {
+  res.json({ 
+    status: 'Bot is running',
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString()
+  });
+});
+
+app.get('/health', (req, res) => {
+  res.json({ status: 'healthy' });
+});
+
+app.listen(PORT, () => {
+  console.log(`🌐 Health check server running on port ${PORT}`);
+});
 
 const bot = new TelegramBot(process.env.BOT_TOKEN, {
   polling: {
