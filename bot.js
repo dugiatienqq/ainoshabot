@@ -23,6 +23,19 @@ app.listen(PORT, () => {
   console.log(`🌐 Health check server running on port ${PORT}`);
 });
 
+// Self-ping to prevent Render free tier sleep (every 10 minutes)
+if (process.env.RENDER_EXTERNAL_URL) {
+  setInterval(async () => {
+    try {
+      const response = await axios.get(`${process.env.RENDER_EXTERNAL_URL}/health`);
+      console.log('🏓 Self-ping successful:', response.data);
+    } catch (error) {
+      console.log('⚠️ Self-ping failed:', error.message);
+    }
+  }, 10 * 60 * 1000); // 10 minutes
+  console.log('⏰ Self-ping enabled to prevent sleep');
+}
+
 const bot = new TelegramBot(process.env.BOT_TOKEN, {
   polling: {
     interval: 300,
